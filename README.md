@@ -5,7 +5,7 @@ Learn how to write a custom SELinux policy using the CIL (Common Intermediate La
 
 
 
-🪜 ***Step 1*** — Set SELinux to Permissive Mode
+***Step 1*** Set SELinux to Permissive Mode
 
 ```
 sudo setenforce 0
