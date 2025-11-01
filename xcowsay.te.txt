@@ -1,0 +1,82 @@
+policy_module(xcowsay, 1.0.0)
+
+type xcowsay_t;
+type xcowsay_exec_t;
+application_domain(xcowsay_t, xcowsay_exec_t)
+role staff_r types xcowsay_t;
+
+gen_require(`
+
+
+        type xcowsay_t;
+        type xcowsay_exec_t;
+        type staff_t;
+        type fs_t;
+        type xcowsay_tmpfs_t;
+        type xcowsay_tmp_t;
+        role staff_r;
+
+')
+
+
+
+type xcowsay_home_t;
+userdom_user_home_content(xcowsay_home_t)
+
+type xcowsay_tmp_t;
+userdom_user_tmp_content(xcowsay_tmp_t)
+
+type xcowsay_tmpfs_t;
+userdom_user_tmp_content(xcowsay_tmpfs_t)
+
+
+files_tmp_file(xcowsay_tmp_t)
+manage_dirs_pattern(xcowsay_t, xcowsay_tmp_t, xcowsay_tmp_t)
+manage_files_pattern(xcowsay_t, xcowsay_tmp_t, xcowsay_tmp_t)
+files_tmp_filetrans(xcowsay_t, xcowsay_tmp_t, { dir file })
+
+
+manage_lnk_files_pattern(xcowsay_t, xcowsay_tmpfs_t, xcowsay_tmpfs_t)
+manage_fifo_files_pattern(xcowsay_t, xcowsay_tmpfs_t, xcowsay_tmpfs_t)
+manage_sock_files_pattern(xcowsay_t, xcowsay_tmpfs_t, xcowsay_tmpfs_t)
+manage_dirs_pattern(xcowsay_t, xcowsay_tmpfs_t, xcowsay_tmpfs_t)
+manage_files_pattern(xcowsay_t, xcowsay_tmpfs_t, xcowsay_tmpfs_t)
+fs_tmpfs_filetrans(xcowsay_t, xcowsay_tmpfs_t, { dir file lnk_file sock_file fifo_file })
+
+
+
+
+
+
+
+allow xcowsay_t fs_t:filesystem getattr;
+
+
+
+
+
+
+domtrans_pattern(staff_t, xcowsay_exec_t, xcowsay_t)
+
+kernel_read_system_state(xcowsay_t)
+
+corecmd_exec_bin(xcowsay_t)
+
+
+
+require {
+	type user_devpts_t;
+	type xserver_t;
+	type xcowsay_t;
+	type user_tmp_t;
+	type staff_dbusd_t;
+	class unix_stream_socket connectto;
+	class file open;
+	class chr_file { read write };
+}
+
+#============= xcowsay_t ==============
+allow xcowsay_t staff_dbusd_t:unix_stream_socket connectto;
+allow xcowsay_t user_devpts_t:chr_file { read write };
+allow xcowsay_t user_tmp_t:file open;
+allow xcowsay_t xserver_t:unix_stream_socket connectto;

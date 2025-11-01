@@ -1,0 +1,3 @@
+/usr/bin/xcowsay -- gen_context(staff_u:object_r:xcowsay_exec_t, s0)
+HOME_DIR/\.xcowsay(/.*)? gen_context(staff_u:object_r:xcowsay_home_t,s0)
+
